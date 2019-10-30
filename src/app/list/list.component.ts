@@ -1,4 +1,4 @@
-import { Component, OnInit} from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { listItemModel } from "../list-item-model";
 import { ToastrService } from "ngx-toastr";
 import { trigger, transition, useAnimation } from "@angular/animations";
@@ -20,7 +20,6 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     if (localStorage.length > 0) {
-      let i = 1;
       this.idList = JSON.parse(localStorage.getItem("idList"));
       for (let i = 0; i < this.idList.length; i++) {
         this.listItems.push(JSON.parse(localStorage.getItem("Item" + this.idList[i])));
