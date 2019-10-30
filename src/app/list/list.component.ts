@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit} from "@angular/core";
 import { listItemModel } from "../list-item-model";
 import { ToastrService } from "ngx-toastr";
 import { trigger, transition, useAnimation } from "@angular/animations";
@@ -14,10 +14,19 @@ export class ListComponent implements OnInit {
   bounce: any;
   item: string = "";
   listItems: listItemModel[] = [];
+  idList = [];
 
   constructor(private toastr: ToastrService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (localStorage.length > 0) {
+      let i = 1;
+      this.idList = JSON.parse(localStorage.getItem("idList"));
+      for (let i = 0; i < this.idList.length; i++) {
+        this.listItems.push(JSON.parse(localStorage.getItem("Item" + this.idList[i])));
+      }
+    }
+  }
 
   addItem() {
     if (this.item == "") {
@@ -31,6 +40,11 @@ export class ListComponent implements OnInit {
       this.toastr.success("Item: " + this.item, "Item Added!", {
         timeOut: 1500
       });
+
+      let itemName = "Item" + randomId;
+      this.idList.push(randomId);
+      localStorage.setItem(itemName, JSON.stringify(new listItemModel(this.item, false, randomId)));
+      localStorage.setItem("idList", JSON.stringify(this.idList));
       this.item = "";
     }
   }
@@ -40,5 +54,8 @@ export class ListComponent implements OnInit {
       timeOut: 1500
     });
     this.listItems = this.listItems.filter(itemID => itemID.id != item.id);
+    this.idList = this.idList.filter(id => id != item.id);
+    localStorage.removeItem("Item" + item.id);
+    localStorage.setItem("idList", JSON.stringify(this.idList));
   }
 }
